@@ -1,0 +1,8 @@
+@import "tailwindcss";
+.bg{background-image: url(./assets/images/bg3.jpg);
+  background-position: center;
+  background-size: cover;
+}
+.blurr{
+  backdrop-filter: blur(5px);
+}
