@@ -20,8 +20,8 @@ const LoginForm = () => {
             return alert("Invalid password!")
         }
         try {
-            const response = await axios.post('https://learning-management-system-rhk1.onrender.com/api/user/new', {
-                username,
+            const response = await axios.post('https://quickserve-t1f6.onrender.com/api/v1/user/register', {
+                name:username,
                 email,
                 password
             })
