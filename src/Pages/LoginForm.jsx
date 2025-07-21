@@ -27,7 +27,7 @@ const LoginForm = () => {
             })
             console.log("user login ", response)
         } catch (error) {
-            console.log("Error login!")
+            console.log("Error login!", error)
         }
     }
     return (
