@@ -5,6 +5,7 @@ import { MdOutlineKey } from "react-icons/md";
 import axios from 'axios';
 
 const LoginForm = () => {
+    const [isRegister, setisRegister] = useState(false)
     const [username, setUsername] = useState()
     const [email, setEmail] = useState()
     const [password, setPassword] = useState()
@@ -22,23 +23,33 @@ const LoginForm = () => {
         }
         try {
             setLoading(true)
-            const response = await axios.post('https://quickserve-t1f6.onrender.com/api/v1/user/register', {
+            const response = await axios.post(isRegister ? 'https://quickserve-t1f6.onrender.com/api/v1/user/register' : 'https://quickserve-t1f6.onrender.com/api/v1/user/login', {
                 name: username,
                 email,
                 password
             })
-            if (response.success)
+            console.log(response.data)
+            if (response.data.success) {
+
                 alert(response?.data?.message)
+                setUsername('')
+                setEmail('')
+                setPassword('')
+            }
+
 
         } catch (error) {
             console.log("Error login!", error?.response?.data?.message)
             alert(error?.response?.data?.message)
         }
+        finally { setLoading(false) }
     }
     return (
         <div className='w-screen h-screen bg flex justify-center items-center'>
             <div className='blurr p-8 rounded-2xl flex flex-col items-center shadow-xl shadow-black/40'>
-                <div className='text-4xl font-bold text-white mb-8'>Login</div>
+                <div className='text-4xl font-bold text-white mb-8'>{
+                    isRegister ? "Register" : "Login"
+                }</div>
                 <form className={`flex flex-col gap-6 ${loading && 'opacity-50'}`} onSubmit={(e) => {
                     e.preventDefault()
                     userLogin()
@@ -72,11 +83,17 @@ const LoginForm = () => {
                     </div>
                     <button className='bg-white font-bold p-2 rounded-full text-xl active:opacity-70'>
                         {
-                            loading ? 'Loading' : 'Register'
+                            isRegister ? 'Register' : 'Login'
                         }</button>
                     <div className='flex items-center justify-center text-white gap-1'>
-                        <div>Already have an account?</div>
-                        <div className='font-bold'>Login</div>
+                        <div>{
+                            isRegister ? "Already have an account?" : "Don't have an account?"
+                        }</div>
+                        <div className='font-bold active:opacity-50 cursor-pointer' onClick={() => {
+                            setisRegister(!isRegister)
+                        }}>{
+                                isRegister ? "Login" : "Sing up"
+                            }</div>
                     </div>
                 </form>
             </div>
