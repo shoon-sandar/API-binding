@@ -3,6 +3,7 @@ import { FaUser } from "react-icons/fa6";
 import { IoMail } from "react-icons/io5";
 import { MdOutlineKey } from "react-icons/md";
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const LoginForm = () => {
     const [isRegister, setisRegister] = useState(false)
@@ -10,8 +11,9 @@ const LoginForm = () => {
     const [email, setEmail] = useState()
     const [password, setPassword] = useState()
     const [loading, setLoading] = useState(false)
+    const [showPassword, setShowPassword] = useState(false)
     const emailRegex = /^((?!\.)[\w-_.]*[^.])(@\w+)(\.\w+(\.\w+)?[^.\W])$/gim;
-
+    const navigate = useNavigate()
 
     const userLogin = async () => {
         if (!username || username.trim() === "") {
@@ -28,15 +30,17 @@ const LoginForm = () => {
                 email,
                 password
             })
-            console.log(response.data)
-            if (response.data.success) {
-
-                alert(response?.data?.message)
+            console.log(response?.data)
+            if (response?.data?.success) {
+                // alert(response?.data?.message)
                 setUsername('')
                 setEmail('')
                 setPassword('')
-            }
+                localStorage.setItem("user-data", JSON.stringify(response?.data?.data))
+                navigate('/home')
 
+
+            }
 
         } catch (error) {
             console.log("Error login!", error?.response?.data?.message)
@@ -58,14 +62,14 @@ const LoginForm = () => {
                         <input value={username}
                             onChange={(e) => {
                                 setUsername(e.target.value)
-                            }} type="text" placeholder='Username' className='w-[90%] text-white placeholder:text-white text-xl outline-0 ' />
+                            }} type="text" placeholder='Username' className='w-[90%] placeholder:opacity-30 text-white placeholder:text-white text-xl outline-0 ' />
                         <FaUser className='text-white text-xl' />
                     </div>
                     <div className='flex items-center border-2 border-white rounded-full   md:w-[400px] w-[300px]  px-4 py-2 justify-between'>
                         <input value={email}
                             onChange={(e) => {
                                 setEmail(e.target.value)
-                            }} type="text" placeholder='Email' className='w-[90%] text-white placeholder:text-white text-xl outline-0 ' />
+                            }} type="text" placeholder='Email' className='w-[90%] placeholder:opacity-30 text-white placeholder:text-white text-xl outline-0 ' />
                         <IoMail className='text-white text-xl' />
                     </div>
                     <div>
@@ -73,12 +77,21 @@ const LoginForm = () => {
                             <input value={password}
                                 onChange={(e) => {
                                     setPassword(e.target.value)
-                                }} type="password" placeholder='Password' className='w-[90%] text-white placeholder:text-white text-xl outline-0 ' />
+                                }}
+                                type={showPassword ? 'text' : 'password'}
+                                placeholder='Password' className='w-[90%] placeholder:opacity-30 text-white placeholder:text-white text-xl outline-0 '
+                            />
                             <MdOutlineKey className='text-white text-2xl' />
                         </div>
                         <div className='flex justify-between text-white mt-4 p-2'>
-                            <button className='underline'>Show Password</button>
                             <button className='underline'>Forget Password</button>
+
+                            <div className='flex items-center gap-2'>
+                                <input type="checkbox" id='showpassword' checked={showPassword} onChange={() => {
+                                    setShowPassword(!showPassword)
+                                }} />
+                                <label htmlFor="showpassword">Show password</label>
+                            </div>
                         </div>
                     </div>
                     <button className='bg-white font-bold p-2 rounded-full text-xl active:opacity-70'>
